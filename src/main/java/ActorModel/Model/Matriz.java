@@ -1,27 +1,24 @@
 package ActorModel.Model;
 
+import akka.actor.AbstractActor;
 import akka.actor.Props;
-import akka.actor.UntypedActor;
-import akka.actor.ActorRef;
+import akka.japi.pf.ReceiveBuilder;
 
-public class Matriz extends UntypedActor{
-    public enum Mensaje {
-        CREA_MATRIZ
-    }
-
-    private ActorRef calcElement;
+public class Matriz extends AbstractActor {
 
     @Override
-    public void preStart() {
-        // create the greeter actor
-        calcElement = getContext().actorOf(Props.create(CalcElement.class), "calcElement");
+    public Receive createReceive() {
+        return ReceiveBuilder.create()
+                .match(Integer.class, msg -> System.out.println(msg*msg))
+                .match(Double.class, this::square)
+                .build();
     }
 
-    @Override
-    public void onReceive(Object msg) {
-        if (msg == Mensaje.CREA_MATRIZ) {
-            // when the greeter is done, stop this actor and with it the application
-            calcElement.tell(CalcElement.Mensaje.DEVOLVER_VALOR,getSelf());
-        }
+    private void square(double msg){
+        System.out.println(msg*msg);
+    }
+
+    public static Props props(){
+        return Props.create(Matriz.class);
     }
 }

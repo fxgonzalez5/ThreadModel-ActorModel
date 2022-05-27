@@ -59,4 +59,21 @@ public class Matriz {
         }
         return output;
     }
+
+    @Override
+    public String toString() {
+        String output = "";
+        for (var fila : values){
+            output += "{";
+            for (var value : fila){
+                if(value == fila[fila.length-1]){
+                    output += value;
+                }else {
+                    output += value + "\t";
+                }
+            }
+            output += "}\n";
+        }
+        return "Matriz {\n" + output + "}";
+    }
 }

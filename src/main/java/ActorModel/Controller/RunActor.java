@@ -1,11 +1,14 @@
 package ActorModel.Controller;
 
 import ActorModel.Model.Matriz;
+import akka.actor.ActorRef;
+import akka.actor.ActorSystem;
 
 public final class RunActor {
-    private RunActor() {}
 
     public static void main(String[] args) {
-        akka.Main.main(new String[]{Matriz.class.getName()});
+        ActorSystem akkaSystem = ActorSystem.create("system");
+        ActorRef matiz = akkaSystem.actorOf(Matriz.props(), "Matriz");
+        matiz.tell(3, ActorRef.noSender());
     }
 }
