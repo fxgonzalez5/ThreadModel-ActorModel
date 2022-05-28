@@ -1,24 +1,38 @@
 package ActorModel.Model;
 
-import akka.actor.AbstractActor;
-import akka.actor.Props;
-import akka.japi.pf.ReceiveBuilder;
+public class Matriz {
+    private int [][] matrizA;
+    private int [][] matrizB;
 
-public class Matriz extends AbstractActor {
-
-    @Override
-    public Receive createReceive() {
-        return ReceiveBuilder.create()
-                .match(Integer.class, msg -> System.out.println(msg*msg))
-                .match(Double.class, this::square)
-                .build();
+    public Matriz(int[][] matrizA, int[][] matrizB) {
+        this.matrizA = matrizA;
+        this.matrizB = matrizB;
     }
 
-    private void square(double msg){
-        System.out.println(msg*msg);
-    }
+    public void multiplyWithActor() {
+        if (matrizA.length == matrizB[0].length) {
+            int[][] output = new int[matrizA.length][matrizB[0].length];
 
-    public static Props props(){
-        return Props.create(Matriz.class);
+            for (var i = 0; i < output.length; i++) {
+                for (var j = 0; j < output[0].length; j++) {
+                    CalcElement obj = new CalcElement(matrizA, matrizB);
+                    output[i][j] = obj.calcValue(i,j);
+                }
+            }
+
+            String out = "";
+            for (var fila : output){
+                out += "{";
+                for (var value : fila){
+                    if(value == fila[fila.length-1]){
+                        out += value;
+                    }else {
+                        out += value + "\t";
+                    }
+                }
+                out+= "}\n";
+            }
+            System.out.println("Matriz {\n" + out + "}");
+        }
     }
 }
